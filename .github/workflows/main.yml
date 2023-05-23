@@ -12,21 +12,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js 14
-      uses: actions/setup-node@v3
-      with:
-        node-version: 14
-        cache: 'npm'
+      - uses: actions/checkout@v3
+      - name: Use Node.js 14
+        uses: actions/setup-node@v3
+        with:
+          node-version: 14
+          cache: 'npm'
 
-    - run: npm i
-    - run: npm t
-    - run: npm run lint:fix
+      - name: Install Dependencies
+        run: npm i
 
-    - name: Install Railway
+      - name: Run Tests
+        run: npm t
+
+      - name: Fix Linting Issues
+        run: npm run lint:fix
+
+      - name: Install Railway
         run: npm i -g @railway/cli
 
-    - name: Deploy
-      run: railway up
-      env:
-        RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+      - name: Deploy
+        run: railway up
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
