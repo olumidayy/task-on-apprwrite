@@ -9,6 +9,8 @@ export default {
 
   port: process.env.PORT || 8000,
 
+  host: process.env.HOST || 'localhost',
+
   databaseURL: process.env.DB_URL || '',
 
   saltRounds: process.env.SAlT_ROUNDS || 10,
