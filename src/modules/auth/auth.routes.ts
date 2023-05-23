@@ -1,7 +1,7 @@
 import * as express from 'express';
 import AuthService from './auth.service';
 import { APIResponse } from '../../common';
-import { LoginDTO, RegisterDTO } from './auth.interfaces';
+import { LoginDTO, RegisterDTO } from './auth.dtos';
 import {
   ChangePasswordValidator, ConfirmOTPValidator, LoginValidator, RegisterValidator, SendOTPValidator,
 } from './auth.validators';

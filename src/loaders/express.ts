@@ -54,6 +54,7 @@ export default ({ app }: { app: express.Application }) => {
 
   // For handling server errors.
   app.use((err: APIError, req: Request, res: Response, next: NextFunction) => {
+    logger.error(err);
     res.status(err.code || 500);
     res.json(new APIResponse({
       success: false,

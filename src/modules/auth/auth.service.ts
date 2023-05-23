@@ -1,7 +1,7 @@
 import * as bcrypt from 'bcrypt';
 import { User } from '@prisma/client';
 import { sign, SignOptions, TokenExpiredError } from 'jsonwebtoken';
-import { LoginDTO, RegisterDTO } from './auth.interfaces';
+import { LoginDTO, RegisterDTO } from './auth.dtos';
 import { APIError } from '../../common';
 import config from '../../config';
 import generateOTP from '../../common/helpers';
