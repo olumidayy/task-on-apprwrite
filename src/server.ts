@@ -1,7 +1,7 @@
-import app from "./app";
+import app from './app';
+import logger from './common/logger';
 import config from './config';
 
-const server = app.listen(config.port, () =>
-  console.log(`
+app.listen(config.port, () => logger.info(`
     🚀 Server ready at: http://localhost:${config.port}${config.api.prefix}
-`))
+`));

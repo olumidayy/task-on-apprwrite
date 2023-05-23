@@ -1,19 +1,20 @@
-import { PrismaClient, User } from "@prisma/client";
-import { ApiError } from "../../common";
+import { PrismaClient } from '@prisma/client';
+import { APIError } from '../../common';
 
 const prisma = new PrismaClient();
 
 function exclude<User, Key extends keyof User>(
-  user: User
+  user: User,
 ): Omit<User, Key> {
   const keys = ['password', 'otp'];
-  for (let key of keys) {
-    delete user[key]
+  for (let i = 0; i < keys.length; i += 1) {
+    // eslint-disable-next-line no-param-reassign
+    delete user[keys[i]];
   }
-  return user
+  return user;
 }
 
-export class UserService {
+export default class UserService {
   /**
    * Fetches all users.
    * @param
@@ -31,10 +32,10 @@ export class UserService {
   */
   public static async getById(id: number): Promise<any> {
     const user = await prisma.user.findUnique({
-      where: { id }
+      where: { id },
     });
     if (!user) {
-      throw new ApiError({ message: "User not found.", code: 404 });
+      throw new APIError({ message: 'User not found.', code: 404 });
     }
     return exclude(user);
   }
@@ -46,7 +47,7 @@ export class UserService {
   */
   public static async delete(id: number): Promise<void> {
     await prisma.user.delete({
-      where: { id }
+      where: { id },
     });
   }
 }

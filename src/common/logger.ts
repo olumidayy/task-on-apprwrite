@@ -1,6 +1,8 @@
-import pino from "pino";
+import pino from 'pino';
 
-export const logger = pino({
+const logger = pino({
   name: 'app',
-  level: 'debug'
+  level: 'debug',
 });
+
+export default logger;

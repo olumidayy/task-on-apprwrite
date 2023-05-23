@@ -3,7 +3,7 @@ import * as dotenv from 'dotenv';
 // Set the NODE_ENV to 'development' by default
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
-const envFound = dotenv.config();
+dotenv.config();
 
 export default {
 
@@ -17,6 +17,6 @@ export default {
 
   api: {
     prefix: '/api',
-  }
+  },
 
 };

@@ -1,14 +1,15 @@
-import config from '../../../config';
 import { NextFunction, Request, Response } from 'express';
 import { verify } from 'jsonwebtoken';
-import { ApiError } from '../../../common';
 import { User } from '@prisma/client';
+import { APIError } from '../../../common';
+import config from '../../../config';
+import logger from '../../../common/logger';
 
 export async function validateToken(token: string): Promise<any> {
   return new Promise((resolve, reject) => {
     verify(token, config.jwtSecretKey, (error, decoded) => {
       if (error) return reject(error);
-      resolve(decoded);
+      return resolve(decoded);
     });
   });
 }
@@ -30,13 +31,13 @@ export function AuthGuard() {
       try {
         const data: User = await validateToken(token);
         req.body.userId = Number(data.id);
-        console.info(JSON.stringify(data), req.body);
+        logger.info(JSON.stringify(data), req.body);
       } catch (error) {
         return next(error);
       }
     } else {
-      return next(new ApiError({ message: 'Unauthorized.', code: 401 }));
+      return next(new APIError({ message: 'Unauthorized.', code: 401 }));
     }
-    next();
-  }
+    return next();
+  };
 }
