@@ -29,9 +29,9 @@ jobs:
         run: npm run lint:fix
 
       - name: Install Railway
-        run: npm i -g @railway/cli
+        run: npm i @railway/cli
 
       - name: Deploy
-        run: railway up
+        run: npx railway up
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
