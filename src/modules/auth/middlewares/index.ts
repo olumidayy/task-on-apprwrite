@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
 import { verify } from 'jsonwebtoken';
-import { User } from '@prisma/client';
 import { APIError } from '../../../common';
 import config from '../../../config';
 import logger from '../../../common/logger';
@@ -8,7 +7,9 @@ import logger from '../../../common/logger';
 export async function validateToken(token: string): Promise<any> {
   return new Promise((resolve, reject) => {
     verify(token, config.jwtSecretKey, (error, decoded) => {
-      if (error) return reject(error);
+      if (error) {
+        return reject(new APIError({ message: error.message, code: 400 }));
+      }
       return resolve(decoded);
     });
   });
@@ -29,8 +30,8 @@ export function AuthGuard() {
     const token = getTokenFromHeader(req);
     if (token) {
       try {
-        const data: User = await validateToken(token);
-        req.body.userId = Number(data.id);
+        const data = await validateToken(token);
+        req.body.user = data.$id;
         logger.info(JSON.stringify(data), req.body);
       } catch (error) {
         return next(error);

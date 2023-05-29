@@ -17,7 +17,19 @@ export default {
 
   jwtSecretKey: process.env.JWT_SECRET_KEY || '',
 
-  appwriteKey: process.env.APPWRITE_KEY,
+  appwriteKey: process.env.APPWRITE_KEY || '',
+
+  projectID: process.env.PROJECT_ID || '',
+
+  databaseID: process.env.DATABASE_ID || '',
+
+  apiEndpoint: process.env.API_ENDPOINT || '',
+
+  collections: {
+    users: process.env.USER_COLLECTION_ID || '',
+    tasks: process.env.TASK_COLLECTION_ID || '',
+    categories: process.env.CATEGORY_COLLECTION_ID || '',
+  },
 
   api: {
     prefix: '/api',

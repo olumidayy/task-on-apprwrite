@@ -24,7 +24,7 @@ export default (app: express.Router) => {
 
   usersRouter.get('/:id', async (req, res, next) => {
     try {
-      const user = await UserService.getById(Number(req.params.id));
+      const user = await UserService.getById(req.params.id);
       res.status(200).json(new APIResponse({
         success: true,
         message: 'User fetched.',
@@ -38,7 +38,7 @@ export default (app: express.Router) => {
 
   usersRouter.delete('/:id', async (req, res, next) => {
     try {
-      await UserService.delete(Number(req.params.id));
+      await UserService.delete(req.params.id);
       res.status(200).json(new APIResponse({
         success: true,
         message: 'User deleted.',

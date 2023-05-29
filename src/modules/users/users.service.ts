@@ -1,18 +1,7 @@
-import { PrismaClient } from '@prisma/client';
+import { excludeKeys } from '../../common/helpers';
 import { APIError } from '../../common';
-
-const prisma = new PrismaClient();
-
-function exclude<User, Key extends keyof User>(
-  user: User,
-): Omit<User, Key> {
-  const keys = ['password', 'otp'];
-  for (let i = 0; i < keys.length; i += 1) {
-    // eslint-disable-next-line no-param-reassign
-    delete user[keys[i]];
-  }
-  return user;
-}
+import client from '../../config/appwrite';
+import config from '../../config';
 
 export default class UserService {
   /**
@@ -21,8 +10,11 @@ export default class UserService {
    * @returns list of users
   */
   public static async getAll(): Promise<any[]> {
-    const users = await prisma.user.findMany();
-    return users.map(exclude);
+    const users = await client.listDocuments(
+      config.databaseID,
+      config.collections.users,
+    );
+    return users.documents.map(excludeKeys);
   }
 
   /**
@@ -30,14 +22,16 @@ export default class UserService {
    * @param id the user ID.
    * @returns a user or null.
   */
-  public static async getById(id: number): Promise<any> {
-    const user = await prisma.user.findUnique({
-      where: { id },
-    });
+  public static async getById(id: string): Promise<any> {
+    const user = await client.getDocument(
+      config.databaseID,
+      config.collections.users,
+      id,
+    );
     if (!user) {
       throw new APIError({ message: 'User not found.', code: 404 });
     }
-    return exclude(user);
+    return excludeKeys(user);
   }
 
   /**
@@ -45,9 +39,11 @@ export default class UserService {
    * @param id the user ID.
    * @returns
   */
-  public static async delete(id: number): Promise<void> {
-    await prisma.user.delete({
-      where: { id },
-    });
+  public static async delete(id: string): Promise<void> {
+    await client.deleteDocument(
+      config.databaseID,
+      config.collections.users,
+      id,
+    );
   }
 }

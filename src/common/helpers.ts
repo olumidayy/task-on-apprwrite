@@ -2,6 +2,17 @@ function randomNumberWithinRange(min, max) {
   return (Math.floor(Math.random() * (max - min + 1)) + min).toString();
 }
 
-export default function generateOTP() {
+export function generateOTP() {
   return randomNumberWithinRange(100000, 999999);
+}
+
+export function excludeKeys<User, Key extends keyof User>(
+  user: User,
+): Omit<User, Key> {
+  const keys = ['password', 'otp', '$databaseId', '$collectionId'];
+  for (let i = 0; i < keys.length; i += 1) {
+    // eslint-disable-next-line no-param-reassign
+    delete user[keys[i]];
+  }
+  return user;
 }

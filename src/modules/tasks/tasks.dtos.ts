@@ -1,14 +1,14 @@
 export interface NewTaskDTO {
-  userId: number;
+  user: string;
   title: string;
   description: string;
-  categoryId?: number;
+  categoryId?: string;
   deadline?: Date;
 }
 
 export interface UpdateTaskDTO {
   title?: string;
   description?: string;
-  categoryId?: number;
+  categoryId?: string;
   deadline?: Date;
 }

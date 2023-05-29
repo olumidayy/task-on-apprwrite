@@ -17,7 +17,7 @@ export default (app: express.Router) => {
         const category: Category = await CategoryService.create(req.body);
         res.status(200).json(new APIResponse({
           success: true,
-          message: 'category created.',
+          message: 'Category created.',
           code: 200,
           data: category,
         }));
@@ -32,12 +32,12 @@ export default (app: express.Router) => {
     async (req, res, next) => {
       try {
         const category: Category = await CategoryService.update(
-          Number(req.params.id),
+          req.params.id,
           req.body,
         );
         res.status(200).json(new APIResponse({
           success: true,
-          message: 'category updated.',
+          message: 'Category updated.',
           code: 200,
           data: category,
         }));
@@ -51,10 +51,10 @@ export default (app: express.Router) => {
     '/:id',
     async (req, res, next) => {
       try {
-        const category: Category = await CategoryService.getById(Number(req.params.id));
+        const category: Category = await CategoryService.getById(req.params.id);
         res.status(200).json(new APIResponse({
           success: true,
-          message: 'category fetched.',
+          message: 'Category fetched.',
           code: 200,
           data: category,
         }));
@@ -71,7 +71,7 @@ export default (app: express.Router) => {
         const categories: Category[] = await CategoryService.getByUserID(req.body.userId);
         res.status(200).json(new APIResponse({
           success: true,
-          message: 'categories fetched.',
+          message: 'Categories fetched.',
           code: 200,
           data: categories,
         }));
@@ -85,10 +85,10 @@ export default (app: express.Router) => {
     '/:id',
     async (req, res, next) => {
       try {
-        await CategoryService.delete(Number(req.params.id));
+        await CategoryService.delete(req.params.id);
         res.status(200).json(new APIResponse({
           success: true,
-          message: 'category deleted.',
+          message: 'Category deleted.',
           code: 200,
         }));
       } catch (error) {

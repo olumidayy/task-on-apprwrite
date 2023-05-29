@@ -5,7 +5,7 @@ export const RegisterValidator = celebrate(
     body: {
       firstname: Joi.string().required(),
       lastname: Joi.string().required(),
-      email: Joi.string().required(),
+      email: Joi.string().required().lowercase(),
       password: Joi.string().required().pattern(/^[a-zA-Z0-9]{3,30}$/),
     },
   },
@@ -15,7 +15,7 @@ export const RegisterValidator = celebrate(
 export const LoginValidator = celebrate(
   {
     body: {
-      email: Joi.string().required(),
+      email: Joi.string().required().lowercase(),
       password: Joi.string().required(),
     },
   },
@@ -25,7 +25,7 @@ export const LoginValidator = celebrate(
 export const SendOTPValidator = celebrate(
   {
     body: {
-      email: Joi.string().required(),
+      email: Joi.string().required().lowercase(),
     },
   },
   { stripUnknown: true },
@@ -34,7 +34,7 @@ export const SendOTPValidator = celebrate(
 export const ConfirmOTPValidator = celebrate(
   {
     body: {
-      email: Joi.string().required(),
+      email: Joi.string().required().lowercase(),
       otp: Joi.string().required(),
     },
   },
@@ -44,7 +44,7 @@ export const ConfirmOTPValidator = celebrate(
 export const ChangePasswordValidator = celebrate(
   {
     body: {
-      email: Joi.string().required(),
+      email: Joi.string().required().lowercase(),
       otp: Joi.string().required(),
       password: Joi.string().required(),
       confirmPassword: Joi.string().required(),

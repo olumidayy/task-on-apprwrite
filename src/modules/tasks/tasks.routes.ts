@@ -36,7 +36,7 @@ export default (app: express.Router) => {
     async (req, res, next) => {
       try {
         const task: Task = await TaskService.update(
-          Number(req.params.id),
+          req.params.id,
           req.body,
         );
         res.status(200).json(new APIResponse({
@@ -72,7 +72,7 @@ export default (app: express.Router) => {
     '/category/:id',
     async (req, res, next) => {
       try {
-        const tasks: Task[] = await TaskService.getByCategoryID(Number(req.params.id));
+        const tasks: Task[] = await TaskService.getByCategoryID(req.params.id);
         res.status(200).json(new APIResponse({
           success: true,
           message: 'tasks fetched.',
@@ -89,7 +89,7 @@ export default (app: express.Router) => {
     '/:id',
     async (req, res, next) => {
       try {
-        const task: Task = await TaskService.getById(Number(req.params.id));
+        const task: Task = await TaskService.getById(req.params.id);
         res.status(200).json(new APIResponse({
           success: true,
           message: 'task fetched.',
@@ -106,7 +106,7 @@ export default (app: express.Router) => {
     '/',
     async (req, res, next) => {
       try {
-        const tasks: Task[] = await TaskService.getByUserID(req.body.id);
+        const tasks: Task[] = await TaskService.getByUserID(req.body.user);
         res.status(200).json(new APIResponse({
           success: true,
           message: 'tasks fetched.',
@@ -123,7 +123,7 @@ export default (app: express.Router) => {
     '/:id',
     async (req, res, next) => {
       try {
-        await TaskService.delete(Number(req.params.id));
+        await TaskService.delete(req.params.id);
         res.status(200).json(new APIResponse({
           success: true,
           message: 'task deleted.',

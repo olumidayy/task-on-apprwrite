@@ -1,19 +1,24 @@
-import { Category } from '@prisma/client';
+import { ID, Query } from 'node-appwrite';
+import client from '../../config/appwrite';
 import { APIError } from '../../common';
-import prisma from '../../../prisma/client';
 import { NewCategoryDTO, UpdateCategoryDTO } from './categories.dtos';
+import config from '../../config';
+import { excludeKeys } from '../../common/helpers';
 
 export default class categoryService {
   /**
-   * creates new categorys.
+   * creates new categories.
    * @param
    * @returns newly created category
   */
-  public static async create(categoryDTO: NewCategoryDTO): Promise<Category> {
-    const category = await prisma.category.create({
-      data: categoryDTO,
-    });
-    return category;
+  public static async create(categoryDTO: NewCategoryDTO): Promise<any> {
+    const category = await client.createDocument(
+      config.databaseID,
+      config.collections.categories,
+      ID.unique(),
+      categoryDTO,
+    );
+    return excludeKeys(category);
   }
 
   /**
@@ -21,25 +26,28 @@ export default class categoryService {
    * @param
    * @returns updated category
   */
-  public static async update(id: number, categoryDTO: UpdateCategoryDTO): Promise<Category> {
-    const category = await prisma.category.update({
-      where: { id },
-      data: categoryDTO,
-    });
-    return category;
+  public static async update(id: string, categoryDTO: UpdateCategoryDTO): Promise<any> {
+    const category = await client.updateDocument(
+      config.databaseID,
+      config.collections.categories,
+      id,
+      categoryDTO,
+    );
+    return excludeKeys(category);
   }
 
   /**
-   * Fetches all categorys by a user.
+   * Fetches all categories by a user.
    * @param
    * @returns list of categories
   */
-  public static async getByUserID(userId: number): Promise<Category[]> {
-    const categories = await prisma.category.findMany({
-      where: { userId },
-      include: { tasks: true },
-    });
-    return categories;
+  public static async getByUserID(userId: string): Promise<any[]> {
+    const categories = await client.listDocuments(
+      config.databaseID,
+      config.collections.categories,
+      [Query.equal('user', userId)],
+    );
+    return categories.documents.map(excludeKeys);
   }
 
   /**
@@ -47,14 +55,16 @@ export default class categoryService {
    * @param id the category ID.
    * @returns a category or null.
   */
-  public static async getById(id: number): Promise<Category> {
-    const category = await prisma.category.findUnique({
-      where: { id },
-    });
+  public static async getById(id: string): Promise<any> {
+    const category = await client.getDocument(
+      config.databaseID,
+      config.collections.categories,
+      id,
+    );
     if (!category) {
-      throw new APIError({ message: 'category not found.', code: 404 });
+      throw new APIError({ message: 'Category not found.', code: 404 });
     }
-    return category;
+    return excludeKeys(category);
   }
 
   /**
@@ -62,9 +72,12 @@ export default class categoryService {
    * @param id the category ID.
    * @returns
   */
-  public static async delete(id: number): Promise<void> {
-    await prisma.category.delete({
-      where: { id },
-    });
+  public static async delete(id: string): Promise<void> {
+    await this.getById(id);
+    await client.deleteDocument(
+      config.databaseID,
+      config.collections.categories,
+      id,
+    );
   }
 }

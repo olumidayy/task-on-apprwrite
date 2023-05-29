@@ -1,7 +1,9 @@
-import { Task } from '@prisma/client';
+import { ID, Query } from 'node-appwrite';
+import client from '../../config/appwrite';
 import { APIError } from '../../common';
-import prisma from '../../../prisma/client';
 import { NewTaskDTO, UpdateTaskDTO } from './tasks.dtos';
+import config from '../../config';
+import { excludeKeys } from '../../common/helpers';
 
 export default class TaskService {
   /**
@@ -9,11 +11,14 @@ export default class TaskService {
    * @param
    * @returns newly created Task
   */
-  public static async create(taskDTO: NewTaskDTO): Promise<Task> {
-    const task = await prisma.task.create({
-      data: taskDTO,
-    });
-    return task;
+  public static async create(taskDTO: NewTaskDTO): Promise<any> {
+    const task = await client.createDocument(
+      config.databaseID,
+      config.collections.tasks,
+      ID.unique(),
+      taskDTO,
+    );
+    return excludeKeys(task);
   }
 
   /**
@@ -21,12 +26,14 @@ export default class TaskService {
    * @param
    * @returns updated Task
   */
-  public static async update(id: number, taskDTO: UpdateTaskDTO): Promise<Task> {
-    const task = await prisma.task.update({
-      where: { id },
-      data: taskDTO,
-    });
-    return task;
+  public static async update(id: string, taskDTO: UpdateTaskDTO): Promise<any> {
+    const task = await client.updateDocument(
+      config.databaseID,
+      config.collections.tasks,
+      id,
+      taskDTO,
+    );
+    return excludeKeys(task);
   }
 
   /**
@@ -34,9 +41,12 @@ export default class TaskService {
    * @param
    * @returns list of Tasks
   */
-  public static async getAll(): Promise<Task[]> {
-    const Tasks = await prisma.task.findMany();
-    return Tasks;
+  public static async getAll(): Promise<any[]> {
+    const tasks = await client.listDocuments(
+      config.databaseID,
+      config.collections.tasks,
+    );
+    return tasks.documents.map(excludeKeys);
   }
 
   /**
@@ -44,11 +54,13 @@ export default class TaskService {
    * @param
    * @returns list of Tasks
   */
-  public static async getByUserID(userId: number): Promise<Task[]> {
-    const Tasks = await prisma.task.findMany({
-      where: { userId },
-    });
-    return Tasks;
+  public static async getByUserID(userId: string): Promise<any[]> {
+    const tasks = await client.listDocuments(
+      config.databaseID,
+      config.collections.tasks,
+      [Query.equal('user', userId)],
+    );
+    return tasks.documents.map(excludeKeys);
   }
 
   /**
@@ -56,11 +68,13 @@ export default class TaskService {
    * @param
    * @returns list of Tasks
   */
-  public static async getByCategoryID(categoryId: number): Promise<Task[]> {
-    const Tasks = await prisma.task.findMany({
-      where: { categoryId },
-    });
-    return Tasks;
+  public static async getByCategoryID(categoryId: string): Promise<any[]> {
+    const tasks = await client.listDocuments(
+      config.databaseID,
+      config.collections.tasks,
+      [Query.equal('category', categoryId)],
+    );
+    return tasks.documents.map(excludeKeys);
   }
 
   /**
@@ -68,14 +82,16 @@ export default class TaskService {
    * @param id the Task ID.
    * @returns a Task or null.
   */
-  public static async getById(id: number): Promise<Task> {
-    const task = await prisma.task.findUnique({
-      where: { id },
-    });
+  public static async getById(id: string): Promise<any> {
+    const task = await client.getDocument(
+      config.databaseID,
+      config.collections.tasks,
+      id,
+    );
     if (!task) {
       throw new APIError({ message: 'Task not found.', code: 404 });
     }
-    return task;
+    return excludeKeys(task);
   }
 
   /**
@@ -83,10 +99,12 @@ export default class TaskService {
    * @param id the Task ID.
    * @returns
   */
-  public static async delete(id: number): Promise<void> {
+  public static async delete(id: string): Promise<void> {
     await this.getById(id);
-    await prisma.task.delete({
-      where: { id },
-    });
+    await client.deleteDocument(
+      config.databaseID,
+      config.collections.tasks,
+      id,
+    );
   }
 }

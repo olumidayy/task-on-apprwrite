@@ -1,8 +1,10 @@
 export interface NewCategoryDTO {
-  userId: number;
+  userId: string;
   name: string;
+  description?: string;
 }
 
 export interface UpdateCategoryDTO {
   name?: string;
+  description?: string;
 }

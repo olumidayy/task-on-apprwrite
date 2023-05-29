@@ -1,15 +1,27 @@
 import * as bcrypt from 'bcrypt';
-import { User } from '@prisma/client';
 import { sign, SignOptions, TokenExpiredError } from 'jsonwebtoken';
+import { ID, Query } from 'node-appwrite';
 import { LoginDTO, RegisterDTO } from './auth.dtos';
 import { APIError } from '../../common';
 import config from '../../config';
-import generateOTP from '../../common/helpers';
-import prisma from '../../../prisma/client';
+import { excludeKeys, generateOTP } from '../../common/helpers';
 import { validateToken } from './middlewares';
 import logger from '../../common/logger';
+import client from '../../config/appwrite';
 
 export default class AuthService {
+  static async findUserByEmail(email: string) {
+    const query: any = await client.listDocuments(
+      config.databaseID,
+      config.collections.users,
+      [Query.equal('email', email)],
+    );
+    if (!query.total) {
+      return null;
+    }
+    return query.documents[0];
+  }
+
   /**
    * Registers a new user, hashes their password and adds
    * their details to the database.
@@ -17,10 +29,8 @@ export default class AuthService {
    * and password fields.
    * @returns - null
   */
-  static async Register(data: RegisterDTO): Promise<User> {
-    const user: User | null = await prisma.user.findFirst({
-      where: { email: data.email },
-    });
+  static async Register(data: RegisterDTO): Promise<any> {
+    const user: any = await this.findUserByEmail(data.email);
     if (user) {
       throw new APIError({
         message: 'Email is already in use.',
@@ -28,13 +38,17 @@ export default class AuthService {
       });
     }
     const password = await bcrypt.hash(data.password, config.saltRounds);
-    const newUser = await prisma.user.create({
-      data: {
+    const newUser = await client.createDocument(
+      config.databaseID,
+      config.collections.users,
+      ID.unique(),
+      {
         ...data,
         password,
+        createdAt: new Date(),
       },
-    });
-    return newUser;
+    );
+    return excludeKeys(newUser);
   }
 
   /**
@@ -43,9 +57,7 @@ export default class AuthService {
    * @returns - an object containing the @param `userData` and a token
   */
   static async Login(data: LoginDTO) {
-    const user: any = await prisma.user.findFirst({
-      where: { email: data.email },
-    });
+    let user: any = await this.findUserByEmail(data.email);
     if (!user) {
       throw new APIError({ message: 'User does not exist.', code: 404 });
     }
@@ -53,7 +65,7 @@ export default class AuthService {
     if (!match) {
       throw new APIError({ message: 'Invalid credentials.', code: 401 });
     }
-    delete user.password;
+    user = excludeKeys(user);
     return { user, token: this.tokenize(user) };
   }
 
@@ -63,9 +75,7 @@ export default class AuthService {
    * @returns null
   */
   static async SendOTP(email: string) {
-    const user: User | null = await prisma.user.findFirst({
-      where: { email },
-    });
+    const user: any = await this.findUserByEmail(email);
     if (!user) {
       throw new APIError({ message: 'User does not exist.' });
     }
@@ -74,10 +84,12 @@ export default class AuthService {
       expiresIn: '300000',
     };
     const token = sign({ otp }, config.jwtSecretKey, signInOptions);
-    await prisma.user.update({
-      where: { email },
-      data: { otp: token },
-    });
+    await client.updateDocument(
+      config.databaseID,
+      config.collections.users,
+      user.$id,
+      { otp: token },
+    );
     logger.info(otp, token);
     // TODO: Handle Email Sending
   }
@@ -89,9 +101,7 @@ export default class AuthService {
    * @returns null
   */
   static async ConfirmOTP({ email, otp }) {
-    const user = await prisma.user.findFirst({
-      where: { email },
-    });
+    const user = await this.findUserByEmail(email);
     if (!user) {
       throw new APIError({ message: 'Invalid email.', code: 400 });
     }
@@ -108,9 +118,7 @@ export default class AuthService {
   static async ChangePassword({
     email, password, confirmPassword, otp,
   }) {
-    const user = await prisma.user.findFirst({
-      where: { email },
-    });
+    const user = await this.findUserByEmail(email);
     if (!user) {
       throw new APIError({ message: 'Invalid email.', code: 400 });
     }
@@ -122,10 +130,12 @@ export default class AuthService {
       throw new APIError({ message: 'Passwords do not match.', code: 400 });
     }
     const newPassword = await bcrypt.hash(password, config.saltRounds);
-    await prisma.user.update({
-      where: { email },
-      data: { password: newPassword },
-    });
+    await client.updateDocument(
+      config.databaseID,
+      config.collections.users,
+      user.$id,
+      { password: newPassword },
+    );
   }
 
   /**
@@ -133,18 +143,18 @@ export default class AuthService {
    * @returns null
   */
   static async VerifyEmail({ email, otp }) {
-    const user = await prisma.user.findFirst({
-      where: { email },
-    });
+    const user = await this.findUserByEmail(email);
     if (!user) {
       throw new APIError({ message: 'Invalid email.', code: 400 });
     }
     const isValid = await this.checkOTP(user.otp, otp);
     if (isValid) {
-      await prisma.user.update({
-        where: { email },
-        data: { isVerified: true },
-      });
+      await client.updateDocument(
+        config.databaseID,
+        config.collections.users,
+        user.$id,
+        { isVerified: true },
+      );
     } else {
       throw new APIError({ message: 'Invalid code.', code: 400 });
     }
