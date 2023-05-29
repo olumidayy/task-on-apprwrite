@@ -1,4 +1,3 @@
-import { Task } from '@prisma/client';
 import * as express from 'express';
 import { APIResponse } from '../../common';
 import TaskService from './tasks.service';
@@ -17,7 +16,7 @@ export default (app: express.Router) => {
     AuthGuard(),
     async (req, res, next) => {
       try {
-        const task: Task = await TaskService.create(req.body);
+        const task = await TaskService.create(req.body);
         res.status(200).json(new APIResponse({
           success: true,
           message: 'task created.',
@@ -35,7 +34,7 @@ export default (app: express.Router) => {
     UpdateTaskValidator,
     async (req, res, next) => {
       try {
-        const task: Task = await TaskService.update(
+        const task = await TaskService.update(
           req.params.id,
           req.body,
         );
@@ -55,7 +54,7 @@ export default (app: express.Router) => {
     '/all',
     async (req, res, next) => {
       try {
-        const tasks: Task[] = await TaskService.getAll();
+        const tasks = await TaskService.getAll();
         res.status(200).json(new APIResponse({
           success: true,
           message: 'tasks fetched.',
@@ -72,7 +71,7 @@ export default (app: express.Router) => {
     '/category/:id',
     async (req, res, next) => {
       try {
-        const tasks: Task[] = await TaskService.getByCategoryID(req.params.id);
+        const tasks = await TaskService.getByCategoryID(req.params.id);
         res.status(200).json(new APIResponse({
           success: true,
           message: 'tasks fetched.',
@@ -89,7 +88,7 @@ export default (app: express.Router) => {
     '/:id',
     async (req, res, next) => {
       try {
-        const task: Task = await TaskService.getById(req.params.id);
+        const task = await TaskService.getById(req.params.id);
         res.status(200).json(new APIResponse({
           success: true,
           message: 'task fetched.',
@@ -106,7 +105,7 @@ export default (app: express.Router) => {
     '/',
     async (req, res, next) => {
       try {
-        const tasks: Task[] = await TaskService.getByUserID(req.body.user);
+        const tasks = await TaskService.getByUserID(req.body.user);
         res.status(200).json(new APIResponse({
           success: true,
           message: 'tasks fetched.',

@@ -1,4 +1,3 @@
-import { User } from '@prisma/client';
 import * as express from 'express';
 import UserService from './users.service';
 import APIResponse from '../../common/response';
@@ -10,7 +9,7 @@ export default (app: express.Router) => {
 
   usersRouter.get('/', async (req, res, next) => {
     try {
-      const users: User[] = await UserService.getAll();
+      const users = await UserService.getAll();
       res.status(200).json(new APIResponse({
         success: true,
         message: 'Users fetched.',

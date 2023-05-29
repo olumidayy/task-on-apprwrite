@@ -1,4 +1,3 @@
-import { Category } from '@prisma/client';
 import * as express from 'express';
 import { APIResponse } from '../../common';
 import CategoryService from './categories.service';
@@ -14,7 +13,7 @@ export default (app: express.Router) => {
     '/',
     async (req, res, next) => {
       try {
-        const category: Category = await CategoryService.create(req.body);
+        const category = await CategoryService.create(req.body);
         res.status(200).json(new APIResponse({
           success: true,
           message: 'Category created.',
@@ -31,7 +30,7 @@ export default (app: express.Router) => {
     '/:id',
     async (req, res, next) => {
       try {
-        const category: Category = await CategoryService.update(
+        const category = await CategoryService.update(
           req.params.id,
           req.body,
         );
@@ -51,7 +50,7 @@ export default (app: express.Router) => {
     '/:id',
     async (req, res, next) => {
       try {
-        const category: Category = await CategoryService.getById(req.params.id);
+        const category = await CategoryService.getById(req.params.id);
         res.status(200).json(new APIResponse({
           success: true,
           message: 'Category fetched.',
@@ -68,7 +67,7 @@ export default (app: express.Router) => {
     '/',
     async (req, res, next) => {
       try {
-        const categories: Category[] = await CategoryService.getByUserID(req.body.userId);
+        const categories = await CategoryService.getByUserID(req.body.userId);
         res.status(200).json(new APIResponse({
           success: true,
           message: 'Categories fetched.',
