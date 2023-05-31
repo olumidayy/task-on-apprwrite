@@ -2,7 +2,7 @@ import { Client, Databases } from 'node-appwrite';
 import config from '.';
 
 const client = new Client()
-  .setEndpoint('')
+  .setEndpoint('https://cloud.appwrite.io/v1')
   .setProject(config.projectID)
   .setKey(config.appwriteKey);
 
