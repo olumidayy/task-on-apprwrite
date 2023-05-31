@@ -80,7 +80,7 @@ export default class AuthService {
   static async SendOTP(email: string) {
     const user: any = await this.findUserByEmail(email);
     if (!user) {
-      throw new APIError({ message: 'User does not exist.' });
+      throw new APIError({ message: 'User does not exist.', code: 404 });
     }
     const otp = await this.setOTP(user);
     MailerService.sendOTP(user, otp);
@@ -95,7 +95,7 @@ export default class AuthService {
   static async ConfirmOTP({ email, otp }) {
     const user = await this.findUserByEmail(email);
     if (!user) {
-      throw new APIError({ message: 'Invalid email.', code: 400 });
+      throw new APIError({ message: 'Invalid email.', code: 404 });
     }
     const isValid = await this.checkOTP(user.otp, otp);
     if (!isValid) {
@@ -112,7 +112,7 @@ export default class AuthService {
   }) {
     const user = await this.findUserByEmail(email);
     if (!user) {
-      throw new APIError({ message: 'Invalid email.', code: 400 });
+      throw new APIError({ message: 'Invalid email.', code: 404 });
     }
     const isValid = await this.checkOTP(user.otp, otp);
     if (!isValid) {
@@ -137,7 +137,7 @@ export default class AuthService {
   static async VerifyEmail({ email, otp }) {
     const user = await this.findUserByEmail(email);
     if (!user) {
-      throw new APIError({ message: 'Invalid email.', code: 400 });
+      throw new APIError({ message: 'Invalid email.', code: 404 });
     }
     const isValid = await this.checkOTP(user.otp, otp);
     if (isValid) {
