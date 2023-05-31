@@ -31,6 +31,11 @@ export default {
     categories: process.env.CATEGORY_COLLECTION_ID || '',
   },
 
+  mailer: {
+    user: process.env.AUTH_EMAIL,
+    password: process.env.AUTH_PASSWORD,
+  },
+
   api: {
     prefix: '/api',
   },

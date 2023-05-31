@@ -1,0 +1,21 @@
+{
+    "functions": [
+        {
+            "$id": "send-reminder",
+            "name": "Send Reminder",
+            "runtime": "node-16.0",
+            "path": "functions/Send Reminder",
+            "entrypoint": "src/index.js",
+            "ignore": [
+                "node_modules",
+                ".npm"
+            ],
+            "execute": [],
+            "events": [],
+            "schedule": "* * * * *",
+            "timeout": 15
+        }
+    ],
+    "projectId": "647472479bb4531ac227",
+    "projectName": "task-on"
+}

@@ -8,6 +8,7 @@ import { excludeKeys, generateOTP } from '../../common/helpers';
 import { validateToken } from './middlewares';
 import logger from '../../common/logger';
 import client from '../../config/appwrite';
+import MailerService from '../../services/mailer';
 
 export default class AuthService {
   static async findUserByEmail(email: string) {
@@ -30,6 +31,7 @@ export default class AuthService {
    * @returns - null
   */
   static async Register(data: RegisterDTO): Promise<any> {
+    logger.info(config.mailer.user, config.mailer.password);
     const user: any = await this.findUserByEmail(data.email);
     if (user) {
       throw new APIError({
@@ -45,9 +47,10 @@ export default class AuthService {
       {
         ...data,
         password,
-        createdAt: new Date(),
       },
     );
+    const otp = await this.setOTP(newUser);
+    MailerService.sendWelcomeMail(newUser, otp);
     return excludeKeys(newUser);
   }
 
@@ -79,19 +82,8 @@ export default class AuthService {
     if (!user) {
       throw new APIError({ message: 'User does not exist.' });
     }
-    const otp = generateOTP();
-    const signInOptions: SignOptions = {
-      expiresIn: '300000',
-    };
-    const token = sign({ otp }, config.jwtSecretKey, signInOptions);
-    await client.updateDocument(
-      config.databaseID,
-      config.collections.users,
-      user.$id,
-      { otp: token },
-    );
-    logger.info(otp, token);
-    // TODO: Handle Email Sending
+    const otp = await this.setOTP(user);
+    MailerService.sendOTP(user, otp);
   }
 
   /**
@@ -155,6 +147,7 @@ export default class AuthService {
         user.$id,
         { isVerified: true },
       );
+      MailerService.verifiedEmail(user);
     } else {
       throw new APIError({ message: 'Invalid code.', code: 400 });
     }
@@ -190,5 +183,26 @@ export default class AuthService {
       }
       return false;
     }
+  }
+
+  /**
+   * @param user - an object which houses the user's
+   *  information.
+   * @returns - the OTP
+  */
+  private static async setOTP(user) {
+    const otp = generateOTP();
+    const signInOptions: SignOptions = {
+      expiresIn: '300000',
+    };
+    const token = sign({ otp }, config.jwtSecretKey, signInOptions);
+    await client.updateDocument(
+      config.databaseID,
+      config.collections.users,
+      user.$id,
+      { otp: token },
+    );
+    logger.info(otp, token);
+    return otp;
   }
 }
