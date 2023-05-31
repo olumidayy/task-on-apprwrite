@@ -7,6 +7,7 @@ export const NewTaskValidator = celebrate(
       description: Joi.string().required(),
       category: Joi.string(),
       deadline: Joi.date(),
+      user: Joi.string(),
     },
   },
   { stripUnknown: true },

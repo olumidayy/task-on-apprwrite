@@ -13,7 +13,6 @@ export default (app: express.Router) => {
   tasksRouter.post(
     '/',
     NewTaskValidator,
-    AuthGuard(),
     async (req, res, next) => {
       try {
         const task = await TaskService.create(req.body);

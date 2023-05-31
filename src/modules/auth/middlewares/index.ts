@@ -31,8 +31,9 @@ export function AuthGuard() {
     if (token) {
       try {
         const data = await validateToken(token);
+        logger.info(`user ${data}`);
         req.body.user = data.$id;
-        logger.info(JSON.stringify(data), req.body);
+        logger.info(req.body);
       } catch (error) {
         return next(error);
       }
