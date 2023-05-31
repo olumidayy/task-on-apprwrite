@@ -1,15 +1,13 @@
-import DateDiff from 'date-diff';
-import { Client, Databases } from 'node-appwrite';
-import MailerService from './mailer';
-import config from '../config';
+const DateDiff = require('date-diff');
+const { Client, Databases } = require('node-appwrite');
+const MailerService = require('./mailer');
+const config = require('../config');
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-export default async function sendReminders(req, res) {
+module.exports = async function sendReminders(req, res) {
   const client = new Client()
-    .setEndpoint('')
+    .setEndpoint('https://cloud.appwrite.io/v1')
     .setProject(config.projectID)
     .setKey(config.appwriteKey);
-
   const databases = new Databases(client);
   const tasks = await databases.listDocuments(
     config.databaseID,
@@ -18,7 +16,7 @@ export default async function sendReminders(req, res) {
   const date = new Date();
   const users = {};
   for (let i = 0; i < tasks.total; i += 1) {
-    const task: any = tasks.documents[i];
+    const task = tasks.documents[i];
     if (task.deadline && task.deadline <= date) {
       const dateDifference = new DateDiff(task.deadline, date);
       const hours = dateDifference.hours();
@@ -29,8 +27,9 @@ export default async function sendReminders(req, res) {
         } else {
           databases.getDocument(
             config.databaseID,
-            config.collections.tasks,
+            config.collections.users,
             task.user,
+          // eslint-disable-next-line no-loop-func
           ).then((user) => {
             users[task.user] = user;
             MailerService.sendReminder(user, task, { hours, minutes });
@@ -39,4 +38,7 @@ export default async function sendReminders(req, res) {
       }
     }
   }
-}
+  return res.json({
+    message: 'Function executed.',
+  });
+};

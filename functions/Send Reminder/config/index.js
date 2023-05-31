@@ -1,11 +1,11 @@
-import * as dotenv from 'dotenv';
+const dotenv = require('dotenv');
 
 // Set the NODE_ENV to 'development' by default
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 dotenv.config();
 
-export default {
+module.exports = {
 
   appwriteKey: process.env.APPWRITE_KEY || '',
 
@@ -20,8 +20,8 @@ export default {
   },
 
   mailer: {
-    user: process.env.AUTH_EMAIL,
-    password: process.env.AUTH_PASSWORD,
+    user: process.env.AUTH_EMAIL || '',
+    password: process.env.AUTH_PASSWORD || '',
   },
 
 };

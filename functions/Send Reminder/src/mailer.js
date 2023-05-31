@@ -1,6 +1,6 @@
-import * as nodemailer from 'nodemailer';
-import logger from './logger';
-import config from '../config';
+const nodemailer = require('nodemailer');
+const logger = require('./logger');
+const config = require('../config');
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -39,4 +39,4 @@ class MailerService {
   }
 }
 
-export default MailerService;
+module.exports = MailerService;
