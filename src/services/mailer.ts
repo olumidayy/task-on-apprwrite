@@ -16,7 +16,7 @@ const transporter = nodemailer.createTransport({
 class MailerService {
   static async sendWelcomeMail(user, otp) {
     const mailOptions = {
-      from: 'Task On <welcome@task-on.org>',
+      from: 'Task On <welcome@task-on.app>',
       to: user.email,
       subject: 'Welcome to Task On',
       html: `<div>Hello ${user.firstname},<div/>
@@ -36,7 +36,7 @@ class MailerService {
 
   static async sendOTP(user, otp) {
     const mailOptions = {
-      from: config.mailer.user,
+      from: 'Task On <support@task-on.app>',
       to: user.email,
       subject: 'One Time Password',
       html: `<div>Hello ${user.firstname},<div/>
@@ -56,7 +56,7 @@ class MailerService {
 
   static async verifiedEmail(user) {
     const mailOptions = {
-      from: config.mailer.user,
+      from: 'Task On <support@task-on.app>',
       to: user.email,
       subject: 'Account Verified',
       html: `<div>Hello ${user.firstname},<div/>

@@ -24,7 +24,7 @@ class MailerService {
     html += `<div>With love from,<div/>
              <div>Task On<div/>`;
     const mailOptions = {
-      from: config.mailer.user,
+      from: 'Task On <support@task-on.org>',
       to: user.email,
       subject: 'Reminder',
       html,
