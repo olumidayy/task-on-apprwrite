@@ -1,4 +1,4 @@
-const DateDiff = require('date-diff');
+const DateDiff = require('date-diff').default;
 const { Client, Databases } = require('node-appwrite');
 const MailerService = require('./mailer');
 const config = require('../config');
@@ -17,13 +17,14 @@ module.exports = async function sendReminders(req, res) {
   const date = new Date();
   const users = {};
   for (let i = 0; i < tasks.total; i += 1) {
-    const task = tasks.documents[i];
-    if (task.deadline && task.deadline <= date) {
-      const dateDifference = new DateDiff(task.deadline, date);
-      const hours = dateDifference.hours();
-      const minutes = dateDifference.minutes();
+    const task = tasks?.documents[i];
+    const deadline = new Date(task.deadline);
+    if (task.deadline) {
+      const dateDifference = new DateDiff(deadline, date);
+      const hours = Math.round(dateDifference.hours());
+      const minutes = Math.round(dateDifference.minutes());
+      logger.info(`Task: ${task.$id} - ${task.title}, hours: ${hours}, minutes: ${minutes}`);
       if (hours === 24 || hours === 1 || minutes === 0) {
-        logger.info(`Task: ${task.$id} - ${task.name}, hours: ${hours}, minutes: ${minutes}`);
         if (users[task.user]) {
           MailerService.sendReminder(users[task.user], task, { hours, minutes });
         } else {
