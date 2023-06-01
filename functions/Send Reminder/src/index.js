@@ -18,8 +18,8 @@ module.exports = async function sendReminders(req, res) {
   const users = {};
   for (let i = 0; i < tasks.total; i += 1) {
     const task = tasks?.documents[i];
-    const deadline = new Date(task.deadline);
     if (task.deadline) {
+      const deadline = new Date(task.deadline);
       const dateDifference = new DateDiff(deadline, date);
       const hours = Math.round(dateDifference.hours());
       const minutes = Math.round(dateDifference.minutes());
