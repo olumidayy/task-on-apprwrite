@@ -67,7 +67,7 @@ export default (app: express.Router) => {
     '/',
     async (req, res, next) => {
       try {
-        const categories = await CategoryService.getByUserID(req.body.userId);
+        const categories = await CategoryService.getByUserID(req.body.user);
         res.status(200).json(new APIResponse({
           success: true,
           message: 'Categories fetched.',

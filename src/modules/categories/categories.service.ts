@@ -1,9 +1,10 @@
 import { ID, Query } from 'node-appwrite';
 import client from '../../config/appwrite';
-import { APIError } from '../../common';
+import { APIError, logger } from '../../common';
 import { NewCategoryDTO, UpdateCategoryDTO } from './categories.dtos';
 import config from '../../config';
 import { excludeKeys } from '../../common/helpers';
+import TaskService from '../tasks/tasks.service';
 
 export default class categoryService {
   /**
@@ -47,7 +48,22 @@ export default class categoryService {
       config.collections.categories,
       [Query.equal('user', userId)],
     );
-    return categories.documents.map(excludeKeys);
+    const categoriesWithTasks = await Promise.all(
+      categories.documents.map(this.getTasksByCategoryID),
+    );
+    return categoriesWithTasks.map(excludeKeys);
+  }
+
+  /**
+   * Fetches all categories by a user.
+   * @param
+   * @returns list of categories
+  */
+  private static async getTasksByCategoryID(category): Promise<any[]> {
+    const tasks = await TaskService.getByCategoryID(category.$id);
+    logger.info(`tasks: ${tasks}`);
+    logger.info({ ...category, tasks });
+    return { ...category, tasks };
   }
 
   /**
@@ -64,7 +80,8 @@ export default class categoryService {
     if (!category) {
       throw new APIError({ message: 'Category not found.', code: 404 });
     }
-    return excludeKeys(category);
+    const categoryWithTasks = await this.getTasksByCategoryID(category);
+    return excludeKeys(categoryWithTasks);
   }
 
   /**
