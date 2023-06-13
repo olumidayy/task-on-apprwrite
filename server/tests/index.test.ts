@@ -1,5 +1,5 @@
 import * as request from 'supertest';
-import app from '../src/app';
+import app from '../server/src/app';
 
 describe('/api', () => {
   it('returns `Hello World!`', async () => {

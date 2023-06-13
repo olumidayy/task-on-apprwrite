@@ -22,6 +22,9 @@ jobs:
       - name: Install Dependencies
         run: npm i
 
+      - name: Check into server directory
+        run: cd server
+
       - name: Run Tests
         run: npm t
 
