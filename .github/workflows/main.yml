@@ -13,6 +13,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+
+      - name: Check into server directory
+        run: cd server
+
       - name: Use Node.js 16
         uses: actions/setup-node@v3
         with:
@@ -21,9 +25,6 @@ jobs:
 
       - name: Install Dependencies
         run: npm i
-
-      - name: Check into server directory
-        run: cd server
 
       - name: Run Tests
         run: npm t
