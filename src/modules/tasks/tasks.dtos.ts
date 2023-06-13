@@ -11,4 +11,5 @@ export interface UpdateTaskDTO {
   description?: string;
   categoryId?: string;
   deadline?: Date;
+  assignee?: string;
 }

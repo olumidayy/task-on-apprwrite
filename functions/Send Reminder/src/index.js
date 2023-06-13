@@ -37,6 +37,20 @@ module.exports = async function sendReminders(req, res) {
             MailerService.sendReminder(user, task, { hours, minutes });
           });
         }
+        if (task.assignee) {
+          if (users[task.assignee]) {
+            MailerService.sendReminder(users[task.assignee], task, { hours, minutes });
+          } else {
+            databases.getDocument(
+              config.databaseID,
+              config.collections.users,
+              task.assignee,
+            ).then((user) => {
+              users[task.assignee] = user;
+              MailerService.sendReminder(user, task, { hours, minutes });
+            });
+          }
+        }
       }
     }
   }

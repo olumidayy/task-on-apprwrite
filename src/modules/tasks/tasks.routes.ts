@@ -84,6 +84,40 @@ export default (app: express.Router) => {
   );
 
   tasksRouter.get(
+    '/assigned',
+    async (req, res, next) => {
+      try {
+        const tasks = await TaskService.getTasksAssignedToUser(req.body.user);
+        res.status(200).json(new APIResponse({
+          success: true,
+          message: 'tasks fetched.',
+          code: 200,
+          data: tasks,
+        }));
+      } catch (error) {
+        next(error);
+      }
+    },
+  );
+
+  tasksRouter.patch(
+    '/:id/assign',
+    async (req, res, next) => {
+      try {
+        const tasks = await TaskService.assignTaskToUser(req.params.id, req.body.email);
+        res.status(200).json(new APIResponse({
+          success: true,
+          message: 'task assigned.',
+          code: 200,
+          data: tasks,
+        }));
+      } catch (error) {
+        next(error);
+      }
+    },
+  );
+
+  tasksRouter.get(
     '/:id',
     async (req, res, next) => {
       try {

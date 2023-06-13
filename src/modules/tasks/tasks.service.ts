@@ -1,9 +1,11 @@
 import { ID, Query } from 'node-appwrite';
-import client from '../../config/appwrite';
+import { client } from '../../config/appwrite';
 import { APIError } from '../../common';
 import { NewTaskDTO, UpdateTaskDTO } from './tasks.dtos';
 import config from '../../config';
-import { excludeKeys } from '../../common/helpers';
+import { excludeKeys, removeUndefinedValues } from '../../common/helpers';
+import AuthService from '../auth/auth.service';
+import UserService from '../users/users.service';
 
 export default class TaskService {
   /**
@@ -31,7 +33,7 @@ export default class TaskService {
       config.databaseID,
       config.collections.tasks,
       id,
-      taskDTO,
+      removeUndefinedValues(taskDTO),
     );
     return excludeKeys(task);
   }
@@ -64,6 +66,36 @@ export default class TaskService {
   }
 
   /**
+   * Fetches all Tasks assigned to a user.
+   * @param
+   * @returns list of Tasks
+  */
+  public static async getTasksAssignedToUser(userId: string): Promise<any[]> {
+    const tasks = await client.listDocuments(
+      config.databaseID,
+      config.collections.tasks,
+      [Query.equal('assignee', userId)],
+    );
+    return tasks.documents.map(excludeKeys);
+  }
+
+  /**
+   * Fetches assigns a task to a user.
+   * @param
+   * @returns list of Tasks
+  */
+  public static async assignTaskToUser(id: string, email: string): Promise<any> {
+    const user = await AuthService.findUserByEmail(email);
+    const task = await client.updateDocument(
+      config.databaseID,
+      config.collections.tasks,
+      id,
+      { assignee: user.$id },
+    );
+    return excludeKeys(task);
+  }
+
+  /**
    * Fetches all Tasks by a category.
    * @param
    * @returns list of Tasks
@@ -83,13 +115,16 @@ export default class TaskService {
    * @returns a Task or null.
   */
   public static async getById(id: string): Promise<any> {
-    const task = await client.getDocument(
+    const task: any = await client.getDocument(
       config.databaseID,
       config.collections.tasks,
       id,
     );
     if (!task) {
       throw new APIError({ message: 'Task not found.', code: 404 });
+    }
+    if (task.assignee) {
+      task.assignee = await UserService.getById(task.assignee);
     }
     return excludeKeys(task);
   }

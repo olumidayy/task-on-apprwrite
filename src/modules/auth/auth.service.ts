@@ -7,8 +7,9 @@ import config from '../../config';
 import { excludeKeys, generateOTP } from '../../common/helpers';
 import { validateToken } from './middlewares';
 import logger from '../../common/logger';
-import client from '../../config/appwrite';
+import { client } from '../../config/appwrite';
 import MailerService from '../../services/mailer';
+import UserService from '../users/users.service';
 
 export default class AuthService {
   static async findUserByEmail(email: string) {
@@ -69,6 +70,10 @@ export default class AuthService {
       throw new APIError({ message: 'Invalid credentials.', code: 401 });
     }
     user = excludeKeys(user);
+    if (user.profile_image) {
+      const profileImage = await UserService.getProfilePicture(user.profile_image);
+      user.profile_image = profileImage;
+    }
     return { user, token: this.tokenize(user) };
   }
 

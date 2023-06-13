@@ -23,6 +23,8 @@ export default {
 
   databaseID: process.env.DATABASE_ID || '',
 
+  bucketID: process.env.BUCKET_ID || '',
+
   apiEndpoint: process.env.API_ENDPOINT || '',
 
   collections: {

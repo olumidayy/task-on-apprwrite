@@ -1,9 +1,9 @@
 import { ID, Query } from 'node-appwrite';
-import client from '../../config/appwrite';
+import { client } from '../../config/appwrite';
 import { APIError, logger } from '../../common';
 import { NewCategoryDTO, UpdateCategoryDTO } from './categories.dtos';
 import config from '../../config';
-import { excludeKeys } from '../../common/helpers';
+import { excludeKeys, removeUndefinedValues } from '../../common/helpers';
 import TaskService from '../tasks/tasks.service';
 
 export default class categoryService {
@@ -32,7 +32,7 @@ export default class categoryService {
       config.databaseID,
       config.collections.categories,
       id,
-      categoryDTO,
+      removeUndefinedValues(categoryDTO),
     );
     return excludeKeys(category);
   }
