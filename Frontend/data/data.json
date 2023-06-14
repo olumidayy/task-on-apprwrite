@@ -1,0 +1,111 @@
+{
+  "user": [
+    {
+      "email": "danielonyeachonam2022@gmail.com",
+      "password": "asdf",
+      "id": 1
+    },
+    {
+      "email": "danielonyeachonam2022@gmail.com",
+      "password": "asdf",
+      "id": 2
+    },
+    {
+      "email": "danielonyeachonam2022@gmail.com",
+      "password": "asdf",
+      "id": 3
+    },
+    {
+      "email": "danielonyeachonam2022@yahoo.com",
+      "password": "hgjkjhgfd",
+      "id": 4
+    },
+    {
+      "email": "danielonyeachonam2022@yahoo.com",
+      "password": "hgjkjhgfd",
+      "id": 5
+    },
+    {
+      "email": "danielonyeachonam2022@yahoo.com",
+      "password": "hgjkjhgfd",
+      "id": 6
+    },
+    {
+      "email": "danielonyeachonam2022@yahoo.com",
+      "password": "hgjkjhgfd",
+      "id": 7
+    },
+    {
+      "email": "danielonyeachonam2022@yahoo.com",
+      "password": "afsdghj",
+      "id": 8
+    },
+    {
+      "email": "danielonyeachonam2022@yahoo.com",
+      "password": "afsdghj",
+      "id": 9
+    },
+    {
+      "email": "danielonyeachonam2022@yahoo.com",
+      "password": "asdfghj",
+      "id": 10
+    },
+    {
+      "email": "danieloonyeachonam2020@gmail.com",
+      "password": "asdfghj",
+      "id": 11
+    },
+    {
+      "email": "danziarmani@gmail.com",
+      "password": "asdfsdydfgjkbj,",
+      "id": 12
+    },
+    {
+      "email": "danieloonyeachonam2020@gmail.com",
+      "password": "asdfghj",
+      "id": 13
+    },
+    {
+      "email": "danieloonyeachonam2020@gmail.com",
+      "password": "fgdfgjgvbknljik,",
+      "id": 14
+    },
+    {
+      "email": "danieloonyeachonam2020@gmail.com",
+      "password": "\\sdgxfjgfgfjghmgh",
+      "id": 15
+    }
+  ],
+  "tasks": [
+    {
+      "title": "Web-Dev-Tour-2023",
+      "description": "Build an Event-Planner App",
+      "deadline": "2023-09-30",
+      "status": "DONE",
+      "id": 1
+    },
+    {
+      "title": "Task-Management App",
+      "description": "Finish the Task-Management App before tomorrow",
+      "deadline": "2023-06-04",
+      "category": "WebDev",
+      "status": "PENDING",
+      "id": 2
+    },
+    {
+      "title": "Exams",
+      "description": "Study all your general courses today",
+      "deadline": "2023-06-04",
+      "category": "Studying",
+      "id": 3
+    },
+    {
+      "title": "Ope's Manifesto",
+      "description": "Cook up Ope's manifesto",
+      "deadline": "2023-06-04",
+      "category": "",
+      "id": 4
+    }
+  ],
+  "categories": []
+}

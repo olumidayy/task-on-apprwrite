@@ -1,0 +1,53 @@
+.updateCard{
+    margin: 4rem 0 10rem 0 ;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+.updateForm{
+    margin:auto;
+}
+.updateActions button{
+    width: 100%;
+    max-width: unset;
+}
+.updateActions button:nth-child(2){
+    background-color: white;
+    color: black;
+}
+.updateActions{
+    display: flex;
+    flex-direction: row;
+    gap: 5%;
+}
+.formActions .removeBtn{
+    background-color: rgba(255, 0, 0, 0.525);
+}
+.update-bg{
+    width: 100%;
+    height: 100%;
+    background-image: url(../../../../../../Assets/Vectors/vector-5.jpg);
+    background-size: contain;
+}
+@media screen and (max-width:780px) {
+    .updateForm{
+        position: unset;
+        top: unset;
+        left: unset;
+        transform: unset;    
+        margin: 4em auto 0 auto;
+    }
+    .updateCard{
+        flex-direction: column;
+        justify-content: unset;
+        margin-bottom: 2.5rem;
+    }
+    .update-bg{
+        margin-top: 2em;
+    }
+    .updateActions{
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}

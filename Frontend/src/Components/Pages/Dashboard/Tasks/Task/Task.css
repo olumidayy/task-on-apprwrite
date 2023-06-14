@@ -1,0 +1,60 @@
+.task{
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7em;
+    margin: 1em 0;
+    padding: 1rem;
+    position: relative;
+    box-shadow: 2px 4px 12px 1px rgba(0, 0, 0, 0.199);
+    border-radius: 0.5rem;
+    text-align: center;
+}
+.task h3{
+    color: rgb(50, 189, 244);
+    font-size: 1.3rem;
+}
+.myDescription{
+    font-weight: 500;
+    color: gray;
+    font-size: 1rem;
+    margin: 0.5rem 0;
+}
+.myDeadline{
+    font-size: 1rem;
+    font-weight: 600;
+}
+.myDeadline span{
+    color: gray;
+    font-size: 0.95rem;
+}
+.task button{
+    width: 100%;
+    max-width: 150px;
+    background-color: black;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin: auto;
+    margin-top: 0.5rem;
+    position: relative;
+    bottom: 0;
+    box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.365);
+}
+.options{
+    position: absolute;
+    top: 1rem;
+    right: 0.4rem;
+    cursor: pointer;
+}
+.task button a{
+    color: white;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+@media screen and (max-width:700px) {
+    .task{
+        width: 100%;
+        max-width: 450px;
+    }
+}
