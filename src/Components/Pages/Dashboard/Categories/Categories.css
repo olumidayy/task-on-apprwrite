@@ -1,0 +1,64 @@
+.categories{
+    width: 100%;
+    position: relative;
+}
+.myDefaultCategory{
+    text-align: center;
+    width: 100%;
+}
+.selectCategories{
+    width: 100%;
+    background-color:rgb(0, 0, 0);
+    color: white;
+    font-weight: 600;
+    padding: 1rem;
+    border-radius: 0.4rem;
+    box-shadow: 0px 8px 12px 3px rgba(0, 0, 0, 0.123);
+    cursor: pointer;
+    max-width: 250px;
+    font-size: 0.9rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+}
+@media (hover: hover){
+    .selectCategories:hover{
+        opacity: 0.7;
+    }
+}
+.selectCategories span{
+    cursor: pointer;
+}
+.options{
+    width: 100%;
+    max-width: 250px;
+    left: 0;
+    height: 200px;
+    padding: 1rem;
+    margin-top: 3rem;
+    overflow-y: scroll;
+    border-radius: 0.3rem;
+    position: absolute;
+    background-color: white;
+    z-index: 100;
+    box-shadow: 0px 8px 12px 3px rgba(0, 0, 0, 0.123);
+}
+.options ul{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.7rem;
+    align-items: center;
+    text-align: center;
+}
+.options ul h4{
+    margin-top: 4rem;
+}
+.options ul h4 span{
+    color: rgb(50, 189, 244);
+}
+@media screen and (max-width:780px) {
+    
+}

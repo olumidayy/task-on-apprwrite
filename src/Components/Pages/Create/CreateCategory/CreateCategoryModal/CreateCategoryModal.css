@@ -1,0 +1,30 @@
+.modal{
+    width: 100%;
+}
+.backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.849);
+}
+.createCategoryModal{
+    width: 100%;
+    top: 50%;
+    left: 50%;
+    z-index: 10000;
+    transform: translate(-50%,-50%);
+    position: fixed;
+}
+.mySection{
+    width: 90%;
+}
+.categoryForm{
+    background-color: white;
+    box-shadow: 0px 8px 12px 3px rgba(0, 0, 0, 0.123);
+    padding: 1rem;
+    border-radius: 0.7rem;
+    z-index: 1000;
+    width: 100%;
+}

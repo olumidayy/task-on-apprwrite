@@ -1,0 +1,50 @@
+.dashboard{
+    width: 100%;
+}
+.tasksSection{
+    width: 90%;
+    margin: auto;
+}
+.intro{
+    width: 90%;
+    margin: 3rem auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+    text-align: center;
+}
+.intro h1{
+    font-size: 2rem;
+}
+.intro h1 span{
+    color: rgb(50, 189, 244);
+}
+.intro p{
+    font-size: 1.2rem;
+    color: rgba(0, 0, 0, 0.726);
+    line-height: 1.6em;
+    font-weight: 500;
+}
+.intro p span{
+    display: block;
+}
+.taskText{
+    color: black;
+}
+.schedules{
+    color: rgb(50, 189, 244);
+}
+.intro p span span{
+    display: inline;
+    font-weight: 700;
+}
+.categoriesSection{
+    width: 100%;
+    padding: 0 5%;
+    margin: 2rem auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    position: relative;
+}
