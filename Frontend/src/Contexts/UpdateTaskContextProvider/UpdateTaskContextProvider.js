@@ -32,6 +32,7 @@ const UpdateTaskContextProvider = (props) => {
             }
         })
         .then(res=>{
+            console.log(res)
             const taskData = res.data.data
             setFormData({
                 title: taskData.title,
@@ -41,7 +42,7 @@ const UpdateTaskContextProvider = (props) => {
         })
         .catch(err=>{
             console.log(err)
-            return;
+            // return;
         })
     }
     const deleteTask = async (id) => {

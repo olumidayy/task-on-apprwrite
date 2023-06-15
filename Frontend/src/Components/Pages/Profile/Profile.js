@@ -5,9 +5,12 @@ import './Profile.css'
 import {useState} from 'react'
 import axios from 'axios';
 import ValidateProfile from './ValidateProfile';
+import { useNavigate } from 'react-router-dom';
 const Profile = () => {
+    const navigate = useNavigate()
     const token = localStorage.getItem('myToken')
     const user = JSON.parse(localStorage.getItem('user'))
+    const myId = localStorage.getItem('myId')
     const uploadUrl = 'https://task-on-production.up.railway.app/users/update-profile/'
     const [myImage, setMyImage] = useState('')
     const [error, setError] = useState({})
@@ -18,21 +21,26 @@ const Profile = () => {
         const fileError = ValidateProfile(myImage.name)
         setError(fileError)
         if(fileError.all === ""){
-            const image = {
-                image: myImage
-            }
-            axios.post((uploadUrl + user.id, {...image}, {
+            const image = myImage
+            await axios.patch(uploadUrl+myId, {image}, {
                 headers : {
                     'Authorization': `Bearer ${token}`
                 }
             })
             .then(res=>{
                 console.log(res)
+                if(res.status === 200){
+                    navigate('/dashboard')
+                }
             })
             .catch(err=>{
                 console.log(err)
-            }))
-            console.log('Valid')
+                if(err.response.status === 404){
+                    localStorage.clear()
+                    alert('SOMETHING WENT WRONG')
+                    navigate('/login')
+                }
+            })
         }
     }
     return ( 
